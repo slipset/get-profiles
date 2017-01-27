@@ -11,7 +11,7 @@
   (try
     (-> f slurp read-string parse-project)
     (catch Exception e
-      (error "Couldn't read and project" (.getName f)))))
+      (error "Couldn't read and parse project" (.getName f)))))
 
 (defn read-projects [path]
   (let [projects (rest (file-seq (clojure.java.io/file path)))]
@@ -41,10 +41,24 @@
 
 (defn projects-without-deps [projects]
   (->> projects
-       (filter(complement  :dependencies))
+       (filter (complement :dependencies))
        (map :name)))
 
 (defn projects-without-clojure [projects]
   (->> projects
        (keep #(when ((complement has-clojure) %)
-                 (:dependencies %)))))
+                (:dependencies %)))))
+
+(defn has-version-range [p]
+  (let [deps (:dependencies p)]
+    (seq (filter (fn [dep]
+                   (when-let [version (some-> dep
+                                         second)]
+                     (or (.contains version ")")
+                         (.contains version "(")
+                         (.contains version ",")))) deps))))
+
+(defn with-ranges [projects]
+  (->> projects
+       (filter has-version-range)
+       (map :name)))

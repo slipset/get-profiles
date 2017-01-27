@@ -1,0 +1,43 @@
+(defproject yuppiechef/cqrs-server "0.1.4"
+  :description "Implementation of a simple CQRS server using Onyx"
+  :url "https://github.com/Yuppiechef/cqrs-server"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :dependencies
+  [[org.clojure/clojure "1.7.0-beta1"]
+   [org.clojure/tools.logging "0.3.1"]
+   [org.clojure/java.data "0.1.1"]
+   [prismatic/schema "0.4.0"]
+   [danlentz/clj-uuid "0.1.5"]
+   [com.taoensso/nippy "2.8.0"]
+   [org.clojure/data.json "0.2.6"]
+   [commons-codec "1.10"]
+   [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+   [joda-time/joda-time "2.7"]
+   [datomic-schema "1.3.0"]]
+  :profiles
+  {:datomic-free
+   {:dependencies
+    [[com.datomic/datomic-free "0.9.5153" :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]}
+   :datomic-pro
+   {:dependencies
+    [[com.datomic/datomic-pro "0.9.5153" :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]}
+   :test
+   {:dependencies
+    [[com.datomic/datomic-free "0.9.5153" :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]
+     [com.amazonaws/aws-java-sdk-core "1.9.30" :exclusions [joda-time]]
+     [com.amazonaws/aws-java-sdk-dynamodb "1.9.30" :exclusions [joda-time]]
+     [com.amazonaws/aws-java-sdk-s3 "1.9.30"  :exclusions [joda-time]]
+     [org.slf4j/slf4j-api "1.7.12"]
+     [zookeeper-clj "0.9.3"]
+     [org.apache.zookeeper/zookeeper "3.4.6"]
+     [com.mdrogalis/onyx "0.6.0-SNAPSHOT"]
+     [yuppiechef/onyx-dynamodb "0.5.0"]
+     [com.taoensso/faraday "1.6.0" :exclusions [org.clojure/clojure joda-time]]
+     [com.mdrogalis/onyx-datomic "0.5.3"]
+     [criterium "0.4.3"]
+     [com.mdrogalis/onyx-kafka "0.5.3.1" :exclusions [org.slf4j/slf4j-simple]]
+     [com.cemerick/pomegranate "0.3.0"]]}}
+  :aot [cqrs-server.cqrs]
+  #_:repl-options #_{ :init-ns cqrs-server.core :timeout 120000}
+  #_:main #_cqrs-server.core)
